@@ -1,8 +1,24 @@
-// Get all courses (already exists)
+const Course = require('../models/Course');
+
+// Get all courses
 const getCourses = async (req, res) => {
   try {
     const courses = await Course.find({ isActive: true }).sort({ createdAt: -1 });
     res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get course by ID
+const getCourseById = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+    if (course) {
+      res.json(course);
+    } else {
+      res.status(404).json({ message: 'Course not found' });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -88,4 +104,13 @@ const deleteCourse = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+// ✅ Export all controllers
+module.exports = {
+  getCourses,
+  getCourseById,
+  createCourse,
+  updateCourse,
+  deleteCourse,
 };
